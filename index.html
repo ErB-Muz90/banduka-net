@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20100%20100%27%3e%3crect%20x=%270%27%20y=%270%27%20width=%27100%27%20height=%27100%27%20rx=%2720%27%20fill=%27%23FF6F00%27/%3e%3cpath%20d=%27M65%2050%20C%2075%2050%2c%2082.5%2042.5%2c%2082.5%2032.5%20C%2082.5%2022.5%2c%2075%2015%2c%2065%2015%20H%2030%20V%2050%20H%2065%20Z%27%20fill=%27white%27/%3e%3cpath%20d=%27M67.5%2085%20C%2077.5%2085%2c%2085%2077.5%2c%2085%2067.5%20C%2085%2057.5%2c%2077.5%2050%2c%2067.5%2050%20H%2030%20V%2085%20H%2067.5%20Z%27%20fill=%27white%27/%3e%3cpath%20d=%27M42%2062%20L%2050%2070%20L%2068%2052%27%20stroke=%27%23455A64%27%20stroke-width=%278%27%20stroke-linecap=%27round%27%20stroke-linejoin=%27round%27%20fill=%27none%27/%3e%3c/svg%3e">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banduka POS™ - Point of Sale</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: 'hsl(var(--primary))',
+              'primary-focus': 'hsl(var(--primary-focus))',
+              'primary-content': 'hsl(var(--primary-content))',
+
+              secondary: 'hsl(var(--secondary))',
+              'secondary-content': 'hsl(var(--secondary-content))',
+
+              accent: 'hsl(var(--accent))',
+              'accent-focus': 'hsl(var(--accent-focus))',
+              
+              success: 'hsl(var(--success))',
+              warning: 'hsl(var(--warning))',
+              danger: 'hsl(var(--danger))',
+              
+              background: 'hsl(var(--background))',
+              foreground: 'hsl(var(--foreground))',
+              'foreground-muted': 'hsl(var(--foreground-muted))',
+              
+              card: 'hsl(var(--card))',
+              border: 'hsl(var(--border))',
+              muted: 'hsl(var(--muted))',
+            },
+            boxShadow: {
+                'clay-light': '4px 4px 8px #d1d9e6, -4px -4px 8px #ffffff',
+                'clay-light-inset': 'inset 4px 4px 8px #d1d9e6, inset -4px -4px 8px #ffffff',
+                'clay-dark': '3px 3px 6px #1a1a1a, -3px -3px 6px #282828',
+                'clay-dark-inset': 'inset 3px 3px 6px #1a1a1a, inset -3px -3px 6px #282828',
+                'clay-dark-strong': '6px 6px 12px #1a1a1a, -6px -6px 12px #282828',
+            },
+            fontFamily: {
+              sans: ['Inter', 'system-ui', 'sans-serif'],
+              neural: ['Orbitron', 'monospace'],
+            },
+            animation: {
+              'aurora-1': 'aurora-move-1 45s infinite alternate',
+              'aurora-2': 'aurora-move-2 50s infinite alternate',
+              'aurora-3': 'aurora-move-3 40s infinite alternate',
+              'aurora-4': 'aurora-move-4 55s infinite alternate',
+            },
+            keyframes: {
+              'aurora-move-1': { from: { transform: 'translate(-20vw, 10vh) rotate(-30deg)' }, to: { transform: 'translate(20vw, -10vh) rotate(45deg)' }, },
+              'aurora-move-2': { from: { transform: 'translate(15vw, -15vh) rotate(60deg)' }, to: { transform: 'translate(-15vw, 15vh) rotate(120deg)' }, },
+              'aurora-move-3': { from: { transform: 'translate(0, 0) rotate(0deg)' }, to: { transform: 'translate(25vw, 25vh) rotate(-45deg)' }, },
+              'aurora-move-4': { from: { transform: 'translate(30vw, -30vh) rotate(100deg)' }, to: { transform: 'translate(-30vw, 30vh) rotate(20deg)' }, },
+            },
+          }
+        }
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#F8F9FA" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#181A1B" media="(prefers-color-scheme: dark)">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Banduka POS™">
+    
+    <style>
+      :root {
+        --primary: 27 100% 50%;
+        --primary-focus: 27 100% 45%;
+        --primary-content: 0 0% 100%;
+        --secondary: 204 20% 25%;
+        --secondary-content: 0 0% 100%;
+        --accent: 45 100% 60%;
+        --accent-focus: 45 100% 55%;
+
+        --success: 123 42% 45%;
+        --warning: 39 100% 50%;
+        --danger: 0 72% 51%;
+
+        --background: 220 13% 97%; /* #F8F9FA */
+        --foreground: 215 28% 17%;
+        --foreground-muted: 214 15% 45%;
+
+        --card: 0 0% 100%;
+        --border: 210 20% 88%;
+        --muted: 220 16% 93%;
+      }
+      .dark {
+        --primary: 30 100% 58%;
+        --primary-focus: 30 100% 62%;
+        --primary-content: 215 28% 17%;
+        --secondary: 210 16% 82%;
+        --secondary-content: 215 28% 17%;
+        --accent: 45 90% 68%;
+        --accent-focus: 45 90% 72%;
+        
+        --success: 145 58% 65%;
+        --warning: 40 90% 65%;
+        --danger: 0 84% 70%;
+        
+        --background: 216 6% 11%; /* #181A1B */
+        --foreground: 210 17% 82%;
+        --foreground-muted: 210 10% 55%;
+
+        --card: 216 6% 16%;
+        --border: 210 8% 28%;
+        --muted: 216 6% 20%;
+      }
+
+      html, body, #root {
+        height: 100%;
+        overscroll-behavior-y: contain;
+      }
+      body {
+        background-color: hsl(var(--background));
+        font-family: 'Inter', system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      
+      #aurora-container {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;
+        background-color: hsl(var(--background));
+      }
+      .aurora-blob {
+        position: absolute; border-radius: 9999px; filter: blur(128px); will-change: transform;
+      }
+      /* Light Mode Aurora */
+      .aurora-blob:nth-child(1) { width: 40vw; height: 40vw; top: -15%; left: -10%; background: hsl(var(--primary) / 0.15); animation: aurora-move-1 45s infinite alternate; }
+      .aurora-blob:nth-child(2) { width: 50vw; height: 50vw; top: 40%; left: 65%; background: hsl(var(--accent) / 0.1); animation: aurora-move-2 50s infinite alternate; }
+      .aurora-blob:nth-child(3) { width: 35vw; height: 35vw; top: 70%; left: -5%; background: hsl(var(--primary) / 0.1); animation: aurora-move-3 40s infinite alternate; }
+      .aurora-blob:nth-child(4) { width: 45vw; height: 45vw; top: 10%; left: 40%; background: hsl(var(--secondary) / 0.1); animation: aurora-move-4 55s infinite alternate; }
+      /* Dark Mode Aurora */
+      .dark .aurora-blob { mix-blend-mode: screen; }
+      .dark .aurora-blob:nth-child(1) { background: hsl(var(--primary) / 0.2); }
+      .dark .aurora-blob:nth-child(2) { background: hsl(var(--accent) / 0.1); }
+      .dark .aurora-blob:nth-child(3) { background: hsl(var(--primary) / 0.15); }
+      .dark .aurora-blob:nth-child(4) { background: hsl(var(--secondary) / 0.1); }
+
+      .dark ::placeholder { color: hsl(var(--foreground-muted) / 0.7); opacity: 1; }
+
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: hsl(var(--foreground-muted)); }
+      
+      *:focus-visible {
+        outline: 2px solid hsl(var(--primary)) !important;
+        outline-offset: 2px !important;
+        border-radius: 6px;
+        box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2);
+      }
+      .auth-background {
+        background: radial-gradient(ellipse at top, hsl(var(--muted)), hsl(var(--background))), radial-gradient(ellipse at bottom, hsl(var(--muted)), hsl(var(--background)));
+      }
+
+      @media print {
+        .no-print, .no-print * { display: none !important; }
+        body * { visibility: hidden; }
+        #receipt-container, #receipt-container *,
+        #pdf-content-wrapper, #pdf-content-wrapper *,
+        #shift-report-container, #shift-report-container *,
+        #job-card-container, #job-card-container *,
+        #barcode-to-print, #barcode-to-print * { visibility: visible; }
+
+        #receipt-container, #pdf-content-wrapper, #shift-report-container, #job-card-container, #barcode-to-print {
+            position: absolute; left: 0; top: 0; width: 100%; height: auto; margin: 0; padding: 0; border: none; box-shadow: none;
+        }
+        html, body, #root, .overflow-y-auto { overflow: visible !important; height: auto !important; }
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "recharts": "https://esm.sh/recharts@^3.1.0",
+    "framer-motion": "https://esm.sh/framer-motion@^11.3.19",
+    "qrcode": "https://esm.sh/qrcode@^1.5.3",
+    "jspdf": "https://esm.sh/jspdf@^2.5.1",
+    "html2canvas": "https://esm.sh/html2canvas@^1.4.1",
+    "jsbarcode": "https://esm.sh/jsbarcode@^3.11.5",
+    "next": "https://esm.sh/next@^15.4.5",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.16.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="antialiased">
+    <div id="aurora-container">
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+        <div class="aurora-blob"></div>
+    </div>
+    <div id="root"></div>
+    <script>
+      window.process = { env: { API_KEY: '', } };
+    </script>
+    <script type="module" src="./index.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').then(registration => {
+            console.log('SW registration successful: ', registration.scope);
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              if (newWorker) {
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    window.dispatchEvent(new CustomEvent('new-sw-update', { detail: registration }));
+                  }
+                });
+              }
+            });
+          }).catch(error => console.log('SW registration failed: ', error));
+          let refreshing;
+          navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (refreshing) return;
+            window.location.reload();
+            refreshing = true;
+          });
+        });
+      }
+    </script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

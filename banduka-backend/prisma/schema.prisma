@@ -1,0 +1,680 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum Role {
+  Admin
+  Cashier
+  Supervisor
+  Accountant
+}
+
+enum BusinessType {
+  GeneralRetail
+  Restaurant
+  Salon
+  Services
+}
+
+enum PricingType {
+  inclusive
+  exclusive
+}
+
+enum ProductType {
+  Inventory
+  Service
+}
+
+enum PaymentMethod {
+  Cash
+  MPesa
+  Card
+  Points
+}
+
+enum SaleType {
+  Sale
+  Return
+}
+
+enum PurchaseOrderStatus {
+  Draft
+  Sent
+  Received
+  PartiallyReceived
+  Cancelled
+}
+
+enum QuotationStatus {
+  Draft
+  Sent
+  Invoiced
+  Expired
+}
+
+enum LayawayStatus {
+  Active
+  Completed
+  Defaulted
+  Cancelled
+}
+
+enum WorkOrderStatus {
+  Pending
+  InProgress
+  AwaitingParts
+  ReadyForPickup
+  Completed
+  Cancelled
+}
+
+enum SalesOrderStatus {
+  Draft
+  Pending
+  Ordered
+  PartiallyReceived
+  Received
+  Completed
+  Cancelled
+}
+
+enum ShiftStatus {
+  active
+  closed
+}
+
+enum AccountType {
+  Assets
+  Liabilities
+  Equity
+  Revenue
+  Expenses
+  ContraRevenue
+}
+
+enum TransactionReferenceType {
+  Sale
+  Return
+  Expense
+  SupplierPayment
+  StockReceipt
+  BankDeposit
+}
+
+// User model
+model User {
+  id                String              @id @default(uuid())
+  name              String
+  email             String?             @unique
+  username          String              @unique
+  pin               String?
+  password          String
+  role              Role
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  sales             Sale[]              @relation("CashierSales")
+  shifts            Shift[]
+  expenses          Expense[]
+  auditLogs         AuditLog[]
+  timeClockEvents   TimeClockEvent[]
+  layaways          Layaway[]
+  workOrders        WorkOrder[]
+  salesOrders       SalesOrder[]
+  heldReceipts      HeldReceipt[]
+  bankDeposits      BankDeposit[]
+}
+
+// Product model
+model Product {
+  id                String              @id @default(uuid())
+  name              String
+  inventoryCode     String              @unique
+  upc               String?
+  description       String?
+  category          String
+  price             Decimal             @db.Decimal(10, 2)
+  pricingType       PricingType
+  productType       ProductType
+  costPrice         Decimal?            @db.Decimal(10, 2)
+  stock             Int                 @default(0)
+  reservedStock     Int                 @default(0)
+  imageUrl          String?
+  unitOfMeasure     String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  saleItems         SaleItem[]
+  purchaseOrderItems PurchaseOrderItem[]
+  quotationItems    QuotationItem[]
+  layawayItems      LayawayItem[]
+}
+
+// Customer model
+model Customer {
+  id                String              @id @default(uuid())
+  name              String
+  phone             String              @unique
+  email             String?
+  address           String?
+  city              String?
+  dateAdded         DateTime            @default(now())
+  loyaltyPoints     Int                 @default(0)
+  measurements      Json?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  sales             Sale[]
+  quotations        Quotation[]
+  layaways          Layaway[]
+  workOrders        WorkOrder[]
+  salesOrders       SalesOrder[]
+  heldReceipts      HeldReceipt[]
+}
+
+// Sale model
+model Sale {
+  id                String              @id @default(uuid())
+  customerId        String
+  userId            String
+  shiftId           String
+  date              DateTime
+  subtotal          Decimal             @db.Decimal(10, 2)
+  lineItemsDiscountAmount Decimal       @db.Decimal(10, 2)
+  cartDiscountAmount Decimal            @db.Decimal(10, 2)
+  cartDiscount      Json?
+  discountAmount    Decimal             @db.Decimal(10, 2)
+  taxableAmount     Decimal             @db.Decimal(10, 2)
+  tax               Decimal             @db.Decimal(10, 2)
+  total             Decimal             @db.Decimal(10, 2)
+  change            Decimal             @db.Decimal(10, 2)
+  synced            Boolean             @default(false)
+  pointsEarned      Int                 @default(0)
+  pointsUsed        Int                 @default(0)
+  pointsValue       Decimal             @db.Decimal(10, 2)
+  pointsBalanceAfter Int                @default(0)
+  quotationId       String?
+  type              SaleType            @default(Sale)
+  originalSaleId    String?
+  returnReason      String?
+  salesOrderId      String?
+  workOrderId       String?
+  layawayId         String?
+  depositApplied    Decimal?            @db.Decimal(10, 2)
+  grandTotal        Decimal?            @db.Decimal(10, 2)
+  balanceDue        Decimal?            @db.Decimal(10, 2)
+  kraIcn            String?
+  kraQrCodeData     String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  customer          Customer            @relation(fields: [customerId], references: [id])
+  cashier           User                @relation("CashierSales", fields: [userId], references: [id])
+  shift             Shift               @relation(fields: [shiftId], references: [id])
+  items             SaleItem[]
+  payments          Payment[]
+  originalSale      Sale?               @relation("SaleReturns", fields: [originalSaleId], references: [id])
+  returns           Sale[]              @relation("SaleReturns")
+  quotation         Quotation?          @relation(fields: [quotationId], references: [id])
+  salesOrder        SalesOrder?         @relation(fields: [salesOrderId], references: [id])
+  workOrder         WorkOrder?          @relation(fields: [workOrderId], references: [id])
+  layaway           Layaway?            @relation(fields: [layawayId], references: [id])
+  layawayPayments   LayawayPayment[]
+}
+
+// SaleItem model
+model SaleItem {
+  id                String              @id @default(uuid())
+  saleId            String
+  productId         String
+  quantity          Int
+  price             Decimal             @db.Decimal(10, 2)
+  discount          Json?
+  createdAt         DateTime            @default(now())
+  
+  // Relations
+  sale              Sale                @relation(fields: [saleId], references: [id])
+  product           Product             @relation(fields: [productId], references: [id])
+}
+
+// Payment model
+model Payment {
+  id                String              @id @default(uuid())
+  saleId            String
+  method            PaymentMethod
+  amount            Decimal             @db.Decimal(10, 2)
+  transactionCode   String?
+  phoneNumber       String?
+  createdAt         DateTime            @default(now())
+  
+  // Relations
+  sale              Sale                @relation(fields: [saleId], references: [id])
+}
+
+// Supplier model
+model Supplier {
+  id                String              @id @default(uuid())
+  businessName      String?
+  name              String
+  contact           String
+  email             String?
+  creditTerms       String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  purchaseOrders    PurchaseOrder[]
+  supplierInvoices  SupplierInvoice[]
+}
+
+// PurchaseOrder model
+model PurchaseOrder {
+  id                String              @id @default(uuid())
+  poNumber          String              @unique
+  supplierId        String
+  status            PurchaseOrderStatus
+  createdDate       DateTime            @default(now())
+  expectedDate      DateTime
+  receivedDate      DateTime?
+  totalCost         Decimal             @db.Decimal(10, 2)
+  salesOrderId      String?
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  supplier          Supplier            @relation(fields: [supplierId], references: [id])
+  items             PurchaseOrderItem[]
+  supplierInvoices  SupplierInvoice[]
+  salesOrder        SalesOrder?         @relation(fields: [salesOrderId], references: [id])
+}
+
+// PurchaseOrderItem model
+model PurchaseOrderItem {
+  id                String              @id @default(uuid())
+  purchaseOrderId   String
+  productId         String?
+  productName       String
+  quantity          Int
+  cost              Decimal             @db.Decimal(10, 2)
+  quantityReceived  Int                 @default(0)
+  unitOfMeasure     String
+  salesOrderItemId  String?
+  createdAt         DateTime            @default(now())
+  
+  // Relations
+  purchaseOrder     PurchaseOrder       @relation(fields: [purchaseOrderId], references: [id])
+  product           Product?            @relation(fields: [productId], references: [id])
+}
+
+// SupplierInvoice model
+model SupplierInvoice {
+  id                String              @id @default(uuid())
+  invoiceNumber     String              @unique
+  purchaseOrderId   String
+  supplierId        String
+  invoiceDate       DateTime
+  dueDate           DateTime
+  subtotal          Decimal             @db.Decimal(10, 2)
+  taxAmount         Decimal             @db.Decimal(10, 2)
+  totalAmount       Decimal             @db.Decimal(10, 2)
+  paidAmount        Decimal             @db.Decimal(10, 2) @default(0)
+  status            String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  purchaseOrder     PurchaseOrder       @relation(fields: [purchaseOrderId], references: [id])
+  supplier          Supplier            @relation(fields: [supplierId], references: [id])
+  payments          SupplierPayment[]
+}
+
+// SupplierPayment model
+model SupplierPayment {
+  id                String              @id @default(uuid())
+  invoiceId         String
+  paymentDate       DateTime
+  amount            Decimal             @db.Decimal(10, 2)
+  method            String
+  createdAt         DateTime            @default(now())
+  
+  // Relations
+  invoice           SupplierInvoice     @relation(fields: [invoiceId], references: [id])
+}
+
+// Quotation model
+model Quotation {
+  id                String              @id @default(uuid())
+  quoteNumber       String              @unique
+  customerId        String
+  status            QuotationStatus
+  createdDate       DateTime            @default(now())
+  expiryDate        DateTime
+  subtotal          Decimal             @db.Decimal(10, 2)
+  discountAmount    Decimal             @db.Decimal(10, 2)
+  tax               Decimal             @db.Decimal(10, 2)
+  total             Decimal             @db.Decimal(10, 2)
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  customer          Customer            @relation(fields: [customerId], references: [id])
+  items             QuotationItem[]
+  sales             Sale[]
+}
+
+// QuotationItem model
+model QuotationItem {
+  id                String              @id @default(uuid())
+  quotationId       String
+  productId         String
+  quantity          Int
+  price             Decimal             @db.Decimal(10, 2)
+  pricingType       PricingType
+  discount          Json?
+  createdAt         DateTime            @default(now())
+  
+  // Relations
+  quotation         Quotation           @relation(fields: [quotationId], references: [id])
+  product           Product             @relation(fields: [productId], references: [id])
+}
+
+// Layaway model
+model Layaway {
+  id                String              @id @default(uuid())
+  customerId        String
+  userId            String
+  shiftId           String
+  total             Decimal             @db.Decimal(10, 2)
+  deposit           Decimal             @db.Decimal(10, 2)
+  balance           Decimal             @db.Decimal(10, 2)
+  status            LayawayStatus
+  createdDate       DateTime            @default(now())
+  expiryDate        DateTime
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  customer          Customer            @relation(fields: [customerId], references: [id])
+  cashier           User                @relation(fields: [userId], references: [id])
+  shift             Shift               @relation(fields: [shiftId], references: [id])
+  items             LayawayItem[]
+  payments          LayawayPayment[]
+  sales             Sale[]
+}
+
+// LayawayItem model
+model LayawayItem {
+  id                String              @id @default(uuid())
+  layawayId         String
+  productId         String
+  quantity          Int
+  price             Decimal             @db.Decimal(10, 2)
+  discount          Json?
+  createdAt         DateTime            @default(now())
+  
+  // Relations
+  layaway           Layaway             @relation(fields: [layawayId], references: [id])
+  product           Product             @relation(fields: [productId], references: [id])
+}
+
+// LayawayPayment model
+model LayawayPayment {
+  id                String              @id @default(uuid())
+  layawayId         String
+  saleId            String
+  date              DateTime
+  amount            Decimal             @db.Decimal(10, 2)
+  method            PaymentMethod
+  userId            String
+  createdAt         DateTime            @default(now())
+  
+  // Relations
+  layaway           Layaway             @relation(fields: [layawayId], references: [id])
+  sale              Sale                @relation(fields: [saleId], references: [id])
+}
+
+// WorkOrder model
+model WorkOrder {
+  id                String              @id @default(uuid())
+  customerId        String
+  userId            String
+  shiftId           String
+  itemToService     String
+  descriptionOfWork String
+  estimatedCost     Decimal             @db.Decimal(10, 2)
+  depositPaid       Decimal             @db.Decimal(10, 2)
+  assignedToId      String?
+  status            WorkOrderStatus
+  createdDate       DateTime            @default(now())
+  promisedByDate    DateTime
+  completedDate     DateTime?
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  customer          Customer            @relation(fields: [customerId], references: [id])
+  cashier           User                @relation(fields: [userId], references: [id])
+  shift             Shift               @relation(fields: [shiftId], references: [id])
+  sales             Sale[]
+}
+
+// SalesOrder model
+model SalesOrder {
+  id                String              @id @default(uuid())
+  customerId        String
+  userId            String
+  shiftId           String
+  total             Decimal             @db.Decimal(10, 2)
+  deposit           Decimal             @db.Decimal(10, 2)
+  balance           Decimal             @db.Decimal(10, 2)
+  status            SalesOrderStatus
+  createdDate       DateTime            @default(now())
+  deliveryDate      DateTime?
+  shippingAddress   String?
+  notes             String?
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  customer          Customer            @relation(fields: [customerId], references: [id])
+  cashier           User                @relation(fields: [userId], references: [id])
+  shift             Shift               @relation(fields: [shiftId], references: [id])
+  items             SalesOrderItem[]
+  purchaseOrders    PurchaseOrder[]
+  sales             Sale[]
+}
+
+// SalesOrderItem model
+model SalesOrderItem {
+  id                String              @id @default(uuid())
+  salesOrderId      String
+  description       String
+  quantity          Int
+  unitPrice         Decimal             @db.Decimal(10, 2)
+  pricingType       PricingType
+  status            String
+  quantityReceived  Int                 @default(0)
+  productId         String?
+  purchaseOrderId   String?
+  createdAt         DateTime            @default(now())
+  
+  // Relations
+  salesOrder        SalesOrder          @relation(fields: [salesOrderId], references: [id])
+}
+
+// HeldReceipt model
+model HeldReceipt {
+  id                String              @id @default(uuid())
+  name              String
+  customerId        String
+  userId            String
+  items             Json
+  heldAt            DateTime            @default(now())
+  
+  // Relations
+  customer          Customer            @relation(fields: [customerId], references: [id])
+  cashier           User                @relation(fields: [userId], references: [id])
+}
+
+// Expense model
+model Expense {
+  id                String              @id @default(uuid())
+  shiftId           String?
+  userId            String
+  date              DateTime
+  amount            Decimal             @db.Decimal(10, 2)
+  reason            String
+  payee             String?
+  category          String?
+  source            String
+  receiptImageUrl   String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  shift             Shift?              @relation(fields: [shiftId], references: [id])
+  cashier           User                @relation(fields: [userId], references: [id])
+}
+
+// Shift model
+model Shift {
+  id                String              @id @default(uuid())
+  userId            String
+  startTime         DateTime
+  endTime           DateTime?
+  status            ShiftStatus
+  startingFloat     Decimal             @db.Decimal(10, 2)
+  paymentBreakdown  Json?
+  totalSales        Decimal?            @db.Decimal(10, 2)
+  totalPayouts      Decimal?            @db.Decimal(10, 2)
+  expectedCashInDrawer Decimal?         @db.Decimal(10, 2)
+  actualCashInDrawer Decimal?           @db.Decimal(10, 2)
+  cashVariance      Decimal?            @db.Decimal(10, 2)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  user              User                @relation(fields: [userId], references: [id])
+  sales             Sale[]
+  expenses          Expense[]
+  layaways          Layaway[]
+  workOrders        WorkOrder[]
+  salesOrders       SalesOrder[]
+  bankDeposits      BankDeposit[]
+}
+
+// TimeClockEvent model
+model TimeClockEvent {
+  id                String              @id @default(uuid())
+  userId            String
+  clockInTime       DateTime
+  clockOutTime      DateTime?
+  status            String
+  notes             String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  user              User                @relation(fields: [userId], references: [id])
+}
+
+// AuditLog model
+model AuditLog {
+  id                String              @id @default(uuid())
+  timestamp         DateTime            @default(now())
+  userId            String
+  action            String
+  details           String
+  
+  // Relations
+  user              User                @relation(fields: [userId], references: [id])
+}
+
+// Account model (Chart of Accounts)
+model Account {
+  id                String              @id @default(uuid())
+  code              String              @unique
+  name              String
+  type              AccountType
+  isEditable        Boolean             @default(true)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  
+  // Relations
+  journalEntries    JournalEntry[]
+}
+
+// JournalEntry model
+model JournalEntry {
+  id                String              @id @default(uuid())
+  transactionId     String
+  accountId         String
+  debit             Decimal             @db.Decimal(10, 2)
+  credit            Decimal             @db.Decimal(10, 2)
+  createdAt         DateTime            @default(now())
+  
+  // Relations
+  transaction       AccountingTransaction @relation(fields: [transactionId], references: [id])
+  account           Account             @relation(fields: [accountId], references: [id])
+}
+
+// AccountingTransaction model
+model AccountingTransaction {
+  id                String              @id @default(uuid())
+  date              DateTime
+  description       String
+  referenceId       String
+  referenceType     TransactionReferenceType
+  createdAt         DateTime            @default(now())
+  
+  // Relations
+  entries           JournalEntry[]
+}
+
+// BankDeposit model
+model BankDeposit {
+  id                String              @id @default(uuid())
+  date              DateTime
+  amount            Decimal             @db.Decimal(10, 2)
+  bankName          String
+  receiptNumber     String
+  depositedById     String
+  shiftId           String?
+  notes             String?
+  createdAt         DateTime            @default(now())
+  
+  // Relations
+  depositedBy       User                @relation(fields: [depositedById], references: [id])
+  shift             Shift?              @relation(fields: [shiftId], references: [id])
+}
+
+// Settings model (singleton)
+model Settings {
+  id                String              @id @default("default")
+  isSetupComplete   Boolean             @default(false)
+  businessType      BusinessType
+  businessInfo      Json
+  tax               Json
+  discount          Json
+  communication     Json
+  receipt           Json
+  layaway           Json
+  hardware          Json
+  loyalty           Json
+  measurements      Json
+  permissions       Json
+  paymentMethods    Json
+  inventory         Json
+  accounting        Json
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}

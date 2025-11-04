@@ -1,0 +1,8 @@
+{
+  "name": "Banduka POS™",
+  "description": "A modern, responsive, offline-capable Point of Sale (POS) system. It features dynamic cart management, inventory control, and integrated payment options.",
+  "requestFramePermissions": [
+    "usb"
+  ],
+  "prompt": ""
+}

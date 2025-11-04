@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+.env*
+.git
+.gitignore
+README.md
+*.log
+coverage
+.nyc_output
+.cache
+.DS_Store
+.vscode
+.idea
+*.swp
+*.swo
+*~

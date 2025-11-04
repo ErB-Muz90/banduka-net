@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: banduka-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: banduka_pos
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - banduka-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: banduka-backend
+    environment:
+      DATABASE_URL: postgresql://postgres:password@postgres:5432/banduka_pos?schema=public
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key}
+      JWT_EXPIRATION: 15m
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-your-super-secret-refresh-key}
+      JWT_REFRESH_EXPIRATION: 7d
+      NODE_ENV: production
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - banduka-network
+    restart: unless-stopped
+    command: sh -c "npx prisma migrate deploy && node dist/main"
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: banduka-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - banduka-network
+    restart: unless-stopped
+
+  # Optional: pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: banduka-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@banduka.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    networks:
+      - banduka-network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  banduka-network:
+    driver: bridge
