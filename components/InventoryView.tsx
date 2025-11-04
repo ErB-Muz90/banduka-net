@@ -136,8 +136,8 @@ const InventoryView = ({ products, onAddProduct, onUpdateProduct, onDeleteProduc
         return `${settings.businessInfo.currency} ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     };
     
-    const EditIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>;
-    const DeleteIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>;
+    const EditIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>;
+    const DeleteIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>;
 
 
     return (
@@ -167,11 +167,11 @@ const InventoryView = ({ products, onAddProduct, onUpdateProduct, onDeleteProduc
                  <div className="flex items-center space-x-2">
                     <input type="file" ref={importInputRef} className="hidden" accept=".csv" onChange={handleFileSelected} />
                     <button onClick={handleImportClick} whileTap={{ scale: 0.95 }} className="bg-white text-gray-700 font-bold px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors shadow-sm flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                         Import
                     </button>
                      <button onClick={() => setIsExportModalOpen(true)} whileTap={{ scale: 0.95 }} className="bg-white text-gray-700 font-bold px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors shadow-sm flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
                         Export
                     </button>
                     {canEdit && (
@@ -180,7 +180,7 @@ const InventoryView = ({ products, onAddProduct, onUpdateProduct, onDeleteProduc
                             whileTap={{ scale: 0.95 }}
                             className="bg-primary text-primary-content font-bold px-4 py-2 rounded-lg hover:bg-primary-focus transition-colors shadow-sm flex items-center"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
                             Add Product
                         </button>
                     )}
@@ -189,14 +189,14 @@ const InventoryView = ({ products, onAddProduct, onUpdateProduct, onDeleteProduc
             
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <StatCard title="Total Products" value={String(products.length)} subtitle="Active products" icon={React.cloneElement(ICONS.inventory, {className: "w-6 h-6"})} iconBgColor="bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300" />
-                <StatCard title="Low Stock Items" value={String(lowStockItemsCount)} subtitle="Need reordering" icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>} iconBgColor="bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-300" />
+                <StatCard title="Low Stock Items" value={String(lowStockItemsCount)} subtitle="Need reordering" icon={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>} iconBgColor="bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-300" />
                 <StatCard title="Total Stock Value" value={formatCurrency(totalStockValue)} subtitle="At cost price" icon={React.cloneElement(ICONS.profitReport, {className: "w-6 h-6"})} iconBgColor="bg-green-100 dark:bg-green-900/50 text-green-600 dark:text-green-300" />
                 <StatCard title="Potential Retail Value" value={formatCurrency(potentialRetailValue)} subtitle="At selling price" icon={React.cloneElement(ICONS.revenue, {className: "w-6 h-6"})} iconBgColor="bg-purple-100 dark:bg-purple-900/50 text-purple-600 dark:text-purple-300" />
             </div>
 
             <div className="mb-4">
                  <div className="relative">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-foreground-muted dark:text-dark-foreground-muted absolute top-1/2 left-4 -translate-y-1/2" fill="none" viewBox="0 0 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-foreground-muted dark:text-dark-foreground-muted absolute top-1/2 left-4 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                     <input
                         type="text"
                         placeholder="Search products by name or SKU..."
