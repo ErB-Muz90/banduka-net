@@ -178,9 +178,7 @@ const Cart = ({
                         className={`relative inline-flex items-center h-6 rounded-full w-11 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary shadow-clay-light-inset dark:shadow-clay-dark-inset ${activeShift ? 'bg-accent dark:bg-dark-accent' : 'bg-border dark:bg-dark-border'}`}
                         aria-label={activeShift ? "End Shift" : "Start Shift"}
                     >
-                        <div span 
-                            layout
-                            transition={{type: "spring", stiffness: 700, damping: 30}}
+                        <span 
                             className={`inline-block w-4 h-4 bg-white rounded-full transform transition-transform shadow-clay-light dark:shadow-clay-dark ${activeShift ? 'translate-x-6' : 'translate-x-1'}`} 
                         />
                     </button>
@@ -215,13 +213,8 @@ const Cart = ({
                             {cartItems.map(item => {
                                 const allowFractions = FRACTIONAL_UNITS.includes(item.unitOfMeasure);
                                 return (
-                                <div li 
+                                <li 
                                     key={item.id} 
-                                    layout
-                                    initial={{ opacity: 0, y: -20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, x: -50 }}
-                                    transition={{ type: 'spring', stiffness: 500, damping: 50 }}
                                     className="p-4 flex space-x-3"
                                 >
                                     <div className="flex-grow">
@@ -268,7 +261,7 @@ const Cart = ({
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                                         </button>
                                     </div>
-                                </motion.li>
+                                </li>
                             )})}
                         </AnimatePresence>
                     </ul>
