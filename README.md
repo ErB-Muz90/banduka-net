@@ -2,6 +2,24 @@
 
 A comprehensive Point of Sale (POS) system with frontend and backend components.
 
+## Deployment Status
+
+⚠️ **Build Issues**: The application currently has some syntax errors in motion components that need to be fixed before deployment. These are in:
+- `components/UserPinView.tsx`
+- `components/layaway/LayawayDetailView.tsx`  
+- `components/pos/Cart.tsx`
+- `components/setup/WelcomeView.tsx`
+
+## Quick Deploy to Netlify
+
+1. Fork or clone this repository
+2. Fix the syntax errors mentioned above
+3. Deploy via Netlify:
+   - Connect your GitHub repo to Netlify
+   - Build command: `npm run build`
+   - Publish directory: `out`
+   - Add environment variable: `GEMINI_API_KEY`
+
 ## Architecture
 
 - **Frontend**: Next.js React application (TypeScript) - http://localhost:3000
