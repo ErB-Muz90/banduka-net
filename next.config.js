@@ -13,6 +13,9 @@ const nextConfig = {
     // Skip ESLint during build
     ignoreDuringBuilds: true,
   },
+  // Ensure assets work on any domain
+  assetPrefix: '',
+  basePath: '',
   // PWA configuration can be added here later if needed
 };
 
