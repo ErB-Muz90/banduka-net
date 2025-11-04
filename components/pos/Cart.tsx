@@ -143,9 +143,6 @@ const Cart = ({
             <AnimatePresence>
                 {isFloatPromptOpen && (
                     <div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
                         className="absolute inset-0 bg-white/50 dark:bg-dark-card/70 backdrop-blur-xl z-20 flex flex-col items-center justify-center p-6 space-y-4"
                     >
                         <div className="mx-auto bg-primary-soft text-primary dark:bg-dark-primary-soft dark:text-dark-primary w-16 h-16 rounded-full flex items-center justify-center mb-2">

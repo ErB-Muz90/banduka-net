@@ -91,18 +91,13 @@ const WelcomeView: React.FC<WelcomeViewProps> = ({ onComplete }) => {
     return (
         <div className="min-h-screen auth-background flex flex-col items-center justify-center p-4">
             <div
-                initial={{ opacity: 0, y: -20, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
                 className="w-full max-w-4xl"
             >
                 <div className="bg-card/80 dark:bg-dark-card/80 backdrop-blur-2xl rounded-2xl shadow-2xl border border-white/20 dark:border-dark-border/50">
                     <AnimatePresence mode="wait">
                         {step === 1 ? (
-                            <div form 
+                            <form 
                                 key="step1"
-                                initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }}
-                                transition={{ duration: 0.3, ease: 'easeInOut' }}
                                 onSubmit={handleSubmit}
                                 className="p-8 space-y-8"
                             >
@@ -140,7 +135,7 @@ const WelcomeView: React.FC<WelcomeViewProps> = ({ onComplete }) => {
                                         Complete Setup & Launch
                                     </button>
                                 </div>
-                            </motion.form>
+                            </form>
                         ) : (
                              <div
                                 key="step2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}

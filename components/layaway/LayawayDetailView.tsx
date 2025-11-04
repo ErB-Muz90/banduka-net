@@ -39,10 +39,9 @@ const AddPaymentForm: React.FC<{ layaway: Layaway, onAddPayment: (layawayId: str
     };
 
     return (
-        <div form 
+        <form 
             onSubmit={handleSubmit} 
             className="mt-4 p-4 bg-muted dark:bg-dark-muted rounded-lg space-y-3"
-            initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
         >
             <h4 className="font-semibold text-sm">Record New Payment</h4>
             <div>
@@ -61,7 +60,7 @@ const AddPaymentForm: React.FC<{ layaway: Layaway, onAddPayment: (layawayId: str
                 <button type="button" onClick={onClose} className="text-xs font-bold px-3 py-1.5 rounded-md hover:bg-border dark:hover:bg-dark-border">Cancel</button>
                 <button type="submit" className="text-xs font-bold px-3 py-1.5 bg-primary text-primary-content rounded-md">Confirm Payment</button>
             </div>
-        </motion.form>
+        </form>
     );
 };
 

@@ -46,13 +46,7 @@ const UserPinView: React.FC<UserPinViewProps> = ({ user, onPinSubmit, onBack }) 
             {[...Array(4)].map((_, i) => (
                 <div
                     key={i}
-                    className="w-4 h-4 rounded-full border-2"
-                    animate={{ 
-                        backgroundColor: i < enteredPin.length ? 'hsl(var(--success))' : 'transparent',
-                        borderColor: i < enteredPin.length ? 'hsl(var(--success))' : 'hsl(var(--border))',
-                        scale: i === enteredPin.length - 1 ? [1, 1.2, 1] : 1
-                    }}
-                    transition={{ duration: 0.2 }}
+                    className={`w-4 h-4 rounded-full border-2 ${i < enteredPin.length ? 'bg-success border-success' : 'bg-transparent border-border'}`}
                 />
             ))}
         </div>
@@ -66,7 +60,6 @@ const UserPinView: React.FC<UserPinViewProps> = ({ user, onPinSubmit, onBack }) 
                     <button
                         key={i}
                         onClick={() => key === '⌫' ? handleBackspace() : key ? handleKeyPress(key) : null}
-                        whileTap={{ scale: 0.95 }}
                         className="p-4 bg-card/80 dark:bg-dark-card/80 text-foreground dark:text-dark-foreground rounded-2xl text-2xl font-bold enabled:hover:bg-muted dark:enabled:hover:bg-dark-muted disabled:opacity-0 transition-colors shadow-sm border border-border dark:border-dark-border"
                         disabled={!key}
                     >
@@ -97,11 +90,7 @@ const UserPinView: React.FC<UserPinViewProps> = ({ user, onPinSubmit, onBack }) 
                 
                  <AnimatePresence>
                     {error && (
-                         <div p 
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0 }}
-                            className="text-danger font-semibold mb-4 h-5">{error}</motion.p>
+                         <p className="text-danger font-semibold mb-4 h-5">{error}</p>
                     )}
                      {!error && <div className="h-5 mb-4"></div>}
                 </AnimatePresence>
