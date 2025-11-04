@@ -142,9 +142,7 @@ const Cart = ({
         <div className="flex-1 flex flex-col bg-transparent relative min-h-0">
             <AnimatePresence>
                 {isFloatPromptOpen && (
-                    <div 
-                        className="absolute inset-0 bg-white/50 dark:bg-dark-card/70 backdrop-blur-xl z-20 flex flex-col items-center justify-center p-6 space-y-4"
-                    >
+                    <div className="absolute inset-0 bg-white/50 dark:bg-dark-card/70 backdrop-blur-xl z-20 flex flex-col items-center justify-center p-6 space-y-4">
                         <div className="mx-auto bg-primary-soft text-primary dark:bg-dark-primary-soft dark:text-dark-primary w-16 h-16 rounded-full flex items-center justify-center mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                         </div>
